@@ -2,7 +2,7 @@
 
 J-Admin is an advance admin system, that will help prevent admin abuse.
 
-Features Include:
+# Features Include:
 
 *Duty Required in order to do any admin work.
 
