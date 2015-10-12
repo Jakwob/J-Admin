@@ -25,6 +25,18 @@ enum PlayerInformation
 }
 new pInfo[MAX_PLAYERS][PlayerInformation];
 
+public OnPlayerConnect(playerid)
+{
+    pInfo[playerid][Duty] = 0;
+	return 1;
+}
+
+public OnPlayerDisconnect(playerid, reason)
+{
+    pInfo[playerid][Duty] = 0;
+	return 1;
+}
+
 ACMD:adminlevel(playerid, params[])  // Set Yourself Admin.
 {
 	new str[128+MAX_PLAYER_NAME];
@@ -39,5 +51,17 @@ ACMD:adminlevel(playerid, params[])  // Set Yourself Admin.
 ACMD:duty(playerid, params[])
 {
 	if(pInfo[playerid][AdminLevel] == 0) return SCM(playerid, COLOR_RED, "You can not use this command!");
+	if(pInfo[playerid][Duty] == 0) // On Duty
+	{
+		GetPlayerPos(playerid, pInfo[playerid][DutyPosX], pInfo[playerid][DutyPosY], pInfo[playerid][DutyPosZ]);
+		SCM(playerid, COLOR_ORANGE, "You are now in duty mode");
+		pInfo[playerid][Duty] = 1;
+	}
+	if(pInfo[playerid][Duty] == 1) // Off Duty
+	{
+		SetPlayerPos(playerid, pInfo[playerid][DutyPosX], pInfo[playerid][DutyPosY], pInfo[playerid][DutyPosZ]);
+		SCM(playerid, COLOR_ORANGE, "You are now out of duty mode");
+		pInfo[playerid][Duty] = 0;
+	}
 	return 1;
 }
