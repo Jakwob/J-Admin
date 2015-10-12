@@ -10,4 +10,8 @@ J-Admin is an advance admin system, that will help prevent admin abuse.
 
 *Changeable admin levels (#define MAX_ADMIN_LEVEL 10).
 
+# Requirements:
+
+* izcmd.inc
+
 More to come...
