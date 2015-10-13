@@ -136,7 +136,7 @@ ACMD:goto(playerid, params[])
 	if(pInfo[playerid][Duty] == 0) return SCM(playerid, COLOR_RED, "You need to be on duty to use this command!");
 	if(sscanf(params, "us", ID, Reason)) return SCM(playerid, COLOR_ORANGE, "Usage: /goto <ID> <Reason>");
 	if(ID == playerid) return SCM(playerid, COLOR_RED, "You can not teleport to yourself!");
-	if(pInfo[ID][AdminLevel] > 0) return SCM(playerid, COLOR_RED, "You can not teleport to another admin!");
+	if(pInfo[ID][AdminLevel] > 0 && pInfo[ID][Duty] == 0) return SCM(playerid, COLOR_RED, "You can not teleport to an admin that is off duty!");
 	GetPlayerPos(ID, x, y, z);
 	SetPlayerPos(playerid, x, y, z);
 	format(str, sizeof str, "Admin %s has teleported to you.", GetName(playerid));
