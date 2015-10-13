@@ -10,9 +10,13 @@ J-Admin is an advance admin system, that will help prevent admin abuse.
 
 # Commands:
 
-* /adminlevel
-* /duty
 * /goto
+* /adminlevel
+* /amsgs
+* /get
+* /p2p
+* /setadmin
+* /duty
 
 # Requirements:
 
