@@ -19,25 +19,14 @@
 #define COLOR_RED 0xFF0000FF
 #define COLOR_ORANGE 0xFF9900AA
 #define COLOR_GREY 0xAFAFAFAA
+#define COLOR_YELLOW 0xFFFF00AA
 
 enum PlayerInformation
 {
-	Password[128],
-	Cash,
-	Score,
-	Kills,
-	Deaths,
 	Color,
-	
-	Warnings,
-	Kicks,
-	Bans,
-	Banned,
-	Muted,
-	
-	AdminName[32],
 	AdminLevel,
 	Duty,
+	AMessages,
 	Float:DutyPosX,
 	Float:DutyPosY,
 	Float:DutyPosZ,
@@ -48,6 +37,7 @@ new PlayerText:DutyTD[MAX_PLAYERS];
 public OnPlayerConnect(playerid)
 {
     pInfo[playerid][Duty] = 0;
+    pInfo[playerid][AMessages] = 0;
     SetPlayerColor(playerid, COLOR_GREY);
     
     // Textdraws
@@ -113,6 +103,9 @@ ACMD:duty(playerid, params[])
     		ShowPlayerNameTagForPlayer(playerid, i, false);
   		}
 		pInfo[playerid][Duty] = 1;
+		new astr[128+MAX_PLAYER_NAME];
+		format(astr, sizeof astr, "[CMD] %s used /duty", GetName(playerid));
+		SendToAdmins(astr);
 	}
 	else // Off Duty
 	{
@@ -124,6 +117,9 @@ ACMD:duty(playerid, params[])
     		ShowPlayerNameTagForPlayer(playerid, i, true);
   		}
 		pInfo[playerid][Duty] = 0;
+		new astr[128+MAX_PLAYER_NAME];
+		format(astr, sizeof astr, "[CMD] %s used /duty", GetName(playerid));
+		SendToAdmins(astr);
 	}
 	return 1;
 }
@@ -143,7 +139,48 @@ ACMD:goto(playerid, params[])
 	SCM(ID, COLOR_ORANGE, str);
 	format(str, sizeof str, "You have teleported to %s.", GetName(ID));
 	SCM(playerid, COLOR_ORANGE, str);
+	new astr[128+MAX_PLAYER_NAME];
+	format(astr, sizeof astr, "[CMD] %s used /goto and teleported to %s", GetName(playerid), GetName(ID));
+	SendToAdmins(astr);
 	return 1;
+}
+
+ACMD:amsgs(playerid, params[])
+{
+	if(pInfo[playerid][AdminLevel] < 1) return SCM(playerid, COLOR_RED, "You can not use this command!");
+	if(pInfo[playerid][AMessages] == 0)
+	{
+	    pInfo[playerid][AMessages] = 1;
+	    SCM(playerid, COLOR_ORANGE, "You have enabled admin messages");
+	 	new astr[128+MAX_PLAYER_NAME];
+		format(astr, sizeof astr, "[CMD] %s used /amsgs to enable their admin messages", GetName(playerid));
+		SendToAdmins(astr);
+	}
+	else
+	{
+	    pInfo[playerid][AMessages] = 0;
+	    SCM(playerid, COLOR_ORANGE, "You have disabled admin messages");
+ 		new astr[128+MAX_PLAYER_NAME];
+		format(astr, sizeof astr, "[CMD] %s used /amsgs to disable their admin messages", GetName(playerid));
+		SendToAdmins(astr);
+	}
+	return 1;
+}
+
+SendToAdmins(message[])
+{
+    new string[128];
+    for(new i = 0; i < MAX_PLAYERS; i++)
+    {
+    	if(pInfo[i][AdminLevel] == MAX_ADMIN_LEVEL)
+     	{
+     	    if(pInfo[i][AMessages] == 1)
+     	    {
+        		SCM(i,COLOR_YELLOW,message);
+			}
+    	}
+	}
+    return 0;
 }
 
 GetName(playerid)
