@@ -89,6 +89,30 @@ ACMD:adminlevel(playerid, params[])  // Set Yourself Admin.
 	return 1;
 }
 
+ACMD:setadmin(playerid, params[])
+{
+	new ID, level, str[128+MAX_PLAYER_NAME];
+	if(pInfo[playerid][AdminLevel] == 0) return SCM(playerid, COLOR_RED, "You can not use this command!");
+	if(pInfo[playerid][Duty] == 0) return SCM(playerid, COLOR_RED, "You need to be on duty to use this command!");
+	if(sscanf(params, "ud", ID, level)) return SCM(playerid, COLOR_ORANGE, "Usage: /setadmin <ID> <Level>");
+	if(level > MAX_ADMIN_LEVEL) return SCM(playerid, COLOR_RED, "You can not set an admin higher than the highest admin level!");
+	if(pInfo[ID][AdminLevel] == MAX_ADMIN_LEVEL) return SCM(playerid, COLOR_RED, "You can not set a head admins level!");
+	if(!IsPlayerConnected(ID)) return SCM(playerid, COLOR_RED, "That player is not connected!");
+	pInfo[ID][AdminLevel] = level;
+	PlayerTextDrawShow(ID, DutyTD[ID]);
+	format(str, sizeof str, "Admin %s has set your admin level to %d", GetName(playerid), level);
+	SCM(playerid, COLOR_ORANGE, str);
+	format(str, sizeof str, "You have set %s admin level to %d", GetName(ID), level);
+	SCM(playerid, COLOR_ORANGE, str);
+	new astr[128+MAX_PLAYER_NAME];
+	format(astr, sizeof astr, "[CMD] %s used /setadmin and set %s admin level to %d", GetName(playerid), GetName(ID), level);
+	SendToAdmins(astr);
+	if(pInfo[ID][AdminLevel] == 0)
+	{
+        PlayerTextDrawHide(ID, DutyTD[ID]);
+	}
+	return 1;
+}
 
 ACMD:duty(playerid, params[])
 {
