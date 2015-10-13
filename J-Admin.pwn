@@ -140,7 +140,7 @@ ACMD:goto(playerid, params[])
 	format(str, sizeof str, "You have teleported to %s.", GetName(ID));
 	SCM(playerid, COLOR_ORANGE, str);
 	new astr[128+MAX_PLAYER_NAME];
-	format(astr, sizeof astr, "[CMD] %s used /goto and teleported to %s", GetName(playerid), GetName(ID));
+	format(astr, sizeof astr, "[CMD] %s used /goto and teleported to %s. Reason %s", GetName(playerid), GetName(ID), Reason);
 	SendToAdmins(astr);
 	return 1;
 }
