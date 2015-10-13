@@ -89,6 +89,7 @@ ACMD:adminlevel(playerid, params[])  // Set Yourself Admin.
 	return 1;
 }
 
+
 ACMD:duty(playerid, params[])
 {
 	if(pInfo[playerid][AdminLevel] == 0) return SCM(playerid, COLOR_RED, "You can not use this command!");
@@ -141,6 +142,48 @@ ACMD:goto(playerid, params[])
 	SCM(playerid, COLOR_ORANGE, str);
 	new astr[128+MAX_PLAYER_NAME];
 	format(astr, sizeof astr, "[CMD] %s used /goto and teleported to %s. Reason %s", GetName(playerid), GetName(ID), Reason);
+	SendToAdmins(astr);
+	return 1;
+}
+
+ACMD:get(playerid, params[])
+{
+	new Reason, ID, str[128+MAX_PLAYER_NAME];
+	new Float:x, Float:y, Float:z;
+	if(pInfo[playerid][AdminLevel] < 1) return SCM(playerid, COLOR_RED, "You can not use this command!");
+	if(pInfo[playerid][Duty] == 0) return SCM(playerid, COLOR_RED, "You need to be on duty to use this command!");
+	if(sscanf(params, "us", ID, Reason)) return SCM(playerid, COLOR_ORANGE, "Usage: /get <ID> <Reason>");
+	if(!IsPlayerConnected(ID)) return SCM(playerid, COLOR_RED, "That player is not connected!");
+	GetPlayerPos(playerid, x, y, z);
+	SetPlayerPos(ID, x, y, z);
+	format(str, sizeof str, "Admin %s has teleported you to themself.", GetName(playerid));
+	SCM(ID, COLOR_ORANGE, str);
+	format(str, sizeof str, "You have teleported %s to your position", GetName(ID));
+	SCM(playerid, COLOR_ORANGE, str);
+	new astr[128+MAX_PLAYER_NAME];
+	format(astr, sizeof astr, "[CMD] %s used /get and teleported %s to their position. Reason: %s", GetName(playerid), GetName(ID), Reason);
+	SendToAdmins(astr);
+	return 1;
+}
+
+ACMD:p2p(playerid, params[])
+{
+	new Reason, ID, ID1, str[128+MAX_PLAYER_NAME];
+	new Float:x, Float:y, Float:z;
+	if(pInfo[playerid][AdminLevel] < 1) return SCM(playerid, COLOR_RED, "You can not use this command!");
+	if(pInfo[playerid][Duty] == 0) return SCM(playerid, COLOR_RED, "You need to be on duty to use this command!");
+	if(sscanf(params, "uus", ID, ID1, Reason)) return SCM(playerid, COLOR_ORANGE, "Usage: /p2p <player ID> <target ID> <Reason>");
+	if(!IsPlayerConnected(ID) && !IsPlayerConnected(ID)) return SCM(playerid, COLOR_RED, "That player is not connected!");
+	GetPlayerPos(ID, x, y, z);
+	SetPlayerPos(ID1, x, y, z);
+	format(str, sizeof str, "You have teleported %s to %s", GetName(ID), GetName(ID1));
+	SCM(playerid, COLOR_ORANGE, str);
+	format(str, sizeof str, "Admin %s has teleported you to %s", GetName(playerid), GetName(ID1));
+	SCM(ID, COLOR_ORANGE, str);
+	format(str, sizeof str, "Admin %s has teleported %s to you", GetName(playerid), GetName(ID));
+	SCM(ID1, COLOR_ORANGE, str);
+	new astr[128+MAX_PLAYER_NAME];
+	format(astr, sizeof astr, "[CMD] %s used /p2p and teleported %s to %s. Reason: %s", GetName(playerid), GetName(ID), GetName(ID1), Reason);
 	SendToAdmins(astr);
 	return 1;
 }
