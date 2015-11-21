@@ -81,7 +81,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 ACMD:adminlevel(playerid, params[])  // Set Yourself Admin.
 {
 	new str[128+MAX_PLAYER_NAME];
-	if(!IsPlayerAdmin(playerid)) return SCM(playerid, COLOR_RED, "You can not use this command!");
+	if(!IsPlayerAdmin(playerid)) return 0;
 	if(pInfo[playerid][AdminLevel] == MAX_ADMIN_LEVEL) return SCM(playerid, COLOR_RED, "You are already this level!");
 	pInfo[playerid][AdminLevel] = MAX_ADMIN_LEVEL;
 	format(str, sizeof str, "You are now admin level %d [Head Admin]", pInfo[playerid][AdminLevel]);
